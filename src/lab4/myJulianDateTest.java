@@ -18,9 +18,6 @@ class myJulianDateTest {
 		int d=jd.daysBetween(2019,10,31,2018,10,31);
 		System.out.println(d);
 		assertEquals(d,365);
-		
-		
-	
 	}
 	
 	@Test
