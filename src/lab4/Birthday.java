@@ -13,45 +13,112 @@ import java.util.Date;
  *   Which of you is the oldest? Is there a Sunday's Child?
  */
 public class Birthday extends myJulianDate{
-	static final String[] weekday= {"Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"};
+	static final String[] weekday= {"Sunday","Monday","Tuesday","Wednesday",
+			"Thursday","Friday","Saturday"};
+	static int yearNow,monthNow, dayNow,weekdayNow;
+	
 	
 	public Birthday(int y,int m, int d) {
 		super();
-	    int daysOld = gregToJD(y,m,d);
-	    System.out.println("You are "+daysOld+" days old.");//2448571
-	    System.out.println("And you are "+bornOnWhichDay(daysOld)+"'s child.");
-	    int yearOld=todayIsBday(y,m,d);
-	    if(yearOld!=0) {
-	    	System.out.println("Today is your "+yearOld+"th birthday!");
-		    
-	    }
-	    hundred(daysOld);
+		getToday();
+		int bdayJD=gregToJD(y,m,d);
+	    int daysOld = todayInJD()-bdayJD;
+	    
+	    //print today and birthday
+	    System.out.println("Today is "+dateFormat(yearNow,monthNow,dayNow)
+	    +", "+weekday[weekdayNow]+".");
+		System.out.println("Your birthday is "+dateFormat(y,m,d)+".");
+		
+		
+		if(daysOld>0)
+		  System.out.println("You are "+daysOld+" days old.");
+		else
+		  System.out.println("You are due in " +Math.abs(daysOld)+" days.");
+		  
+		//get weekday
+		String bornDay=bornOnWhichDay(daysOld);
+		System.out.println("Your Birthday is a "+bornDay+".");
+		if(bornDay.contentEquals("Sunday"))
+		   System.out.println("And Sunday's child is bonny and blithe, and good and gay!");
+		
+		//check if today's birthday   
+		checkBirthday(y,m,d);
+		//check if daysOld is divisible by 100
+		hundred(daysOld);
+		//get metric years old
+		metricYearsOld(daysOld);
 	}
+	
 	public static void main(String args[]) {
-		Birthday b=new Birthday(1991,8,31);
+		Birthday b=new Birthday(-4,12,24);
 		
 	}
 	
-	//weekday, sunday's child?
-	public String bornOnWhichDay(int JDdays) {
-		int diff=JDdays-gregToJD(1900,1,1);//mon
-		 
-		return weekday[diff%7];
+	
+	public String bornOnWhichDay(int daysOld) {
+		//we use days old because that symbolize the days
+		//different between now and our birthday
+		if(checkCalendarFirstDayisSunday()) {
+			
+			int weekdayBorn=(7 + weekdayNow - (daysOld%7))%7;
+			 return weekday[weekdayBorn];
+		}
+		   
+		else 
+			return "error";
+		//because if calendar first day is not a Sunday
+		//then our weekday array will need to be rearranged
+		
 	}
-	//today
-	public int todayIsBday(int y,int m,int d) {
+	public boolean checkCalendarFirstDayisSunday() {
+		Calendar now = Calendar.getInstance();  
+	
+		boolean isFirstSunday = (now.getFirstDayOfWeek() == Calendar.SUNDAY);  
+		
+		int weekDay = now.get(Calendar.DAY_OF_WEEK);  
+	
+		//just to check if calendar day of week starts with sunday
+		if(isFirstSunday){  
+		//  System.out.println("is first sun");
+		  //System.out.println(weekdayNow);
+			return true;
+		  
+		}  
+		return false;
+//		   weekDay = weekDay - 1;  
+//		    if(weekDay == 0){  
+//		        weekDay = 7;  
+//		    }  
+	}
+	public void checkBirthday(int y, int m, int d) {
+		if (m==monthNow && d==dayNow)		
+			System.out.println("Happy "+yearOld(y)+"th birthday!");
+	    
+	}
+	public int yearOld(int y) {
+		
+		int year=yearNow;
+		return year-y;//years old
+		
+	}
+	public String dateFormat(int year, int month, int day) {
+		if(year<0)
+			return Math.abs(year)+"BC."+month+"."+day;
+		return year+"."+month+"."+day;
+	}
+	public void getToday() {
 		Date date=new Date(); // your date
-		// Choose time zone in which you want to interpret your Date
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(date);
-		int year = cal.get(Calendar.YEAR);
-		int month = cal.get(Calendar.MONTH);
-		int day = cal.get(Calendar.DAY_OF_MONTH);
-		System.out.println(year+"."+month+"."+day);
-		if(m==month && d==day) {
-			return year-y;
-		}
-		return 0;
+		yearNow = cal.get(Calendar.YEAR);
+		monthNow = cal.get(Calendar.MONTH)+1;
+		dayNow = cal.get(Calendar.DAY_OF_MONTH);
+		weekdayNow= cal.get(Calendar.DAY_OF_WEEK)-1;//1-7 sun-sat
+		
+	}
+	public int todayInJD() {
+			
+		return gregToJD(yearNow, monthNow, dayNow);
 	}
 	//divisible by 100?
 	public void hundred(int d) {
@@ -59,5 +126,11 @@ public class Birthday extends myJulianDate{
 			System.out.println("You have lived "+d/100+" of 100 days.");
 		}
 	
+	}
+	public void metricYearsOld(int daysOld) {
+		
+		System.out.println("In Metric Calendar, you are "
+		+daysOld/1000+" years old." );
+
 	}
 }
