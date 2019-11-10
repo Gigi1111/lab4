@@ -33,11 +33,7 @@ public class myJulianDate implements JulianDate {
 
 	}
 
-	@Override
-	public void JDtoGreg(int days) {
-		// TODO Auto-generated method stub
-		
-	}
+
 	public int daysBetween(int y1,int m1, int d1, int y2, int m2, int d2) {
 		myJulianDate jd=new myJulianDate();
 		return Math.abs( jd.gregToJD(y1,m1,d1)-jd.gregToJD(y2, m2, d2));

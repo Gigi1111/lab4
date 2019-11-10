@@ -9,10 +9,7 @@ public interface JulianDate {
 	
 	//void initializeStartDate();
 	int gregToJD(int y, int m, int d);
-	
-	void JDtoGreg(int days);
-	
-	//arithmatics
+
 
 	int daysBetween(int y1,int m1, int d1, int y2, int m2, int d2);
 	
